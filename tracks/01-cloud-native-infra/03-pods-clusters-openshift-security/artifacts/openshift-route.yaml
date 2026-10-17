@@ -1,0 +1,22 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: secure-banking-route
+  namespace: prod-banking-core
+  labels:
+    app.kubernetes.io/name: secure-banking-api
+    router.openshift.io/shard: external-dmz
+  annotations:
+    haproxy.router.openshift.io/timeout: 30s
+    haproxy.router.openshift.io/balance: roundrobin
+spec:
+  host: api.banking.enterprise.internal
+  to:
+    kind: Service
+    name: secure-banking-api
+    weight: 100
+  port:
+    targetPort: https
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

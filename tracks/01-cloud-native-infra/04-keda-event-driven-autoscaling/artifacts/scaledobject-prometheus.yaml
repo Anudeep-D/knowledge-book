@@ -1,0 +1,50 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-processor-scaler
+  namespace: order-fulfillment
+  labels:
+    app.kubernetes.io/name: order-processor-scaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: order-processor
+  pollingInterval: 15       # Polling frequency in seconds against external metric
+  cooldownPeriod: 120       # Seconds to wait before scaling to 0 after last positive metric
+  idleReplicaCount: 0       # Scale-to-zero during non-operational hours
+  minReplicaCount: 1        # Normal operating baseline when traffic is active
+  maxReplicaCount: 50       # Hard upper ceiling to prevent database connection saturation
+  fallback:
+    failureThreshold: 3
+    replicas: 5             # Emergency fallback replicas if Prometheus is unreachable
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+            - type: Pods
+              value: 8
+              periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300 # 5-minute stabilization against flapping
+          policies:
+            - type: Percent
+              value: 10
+              periodSeconds: 60
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus-k8s.monitoring.svc.cluster.local:9090
+        metricName: order_queue_pending_total
+        query: sum(kafka_consumergroup_lag{consumergroup="order-processor-group", topic="orders-high-priority"})
+        threshold: "100"      # Scale 1 replica per 100 pending messages
+        activationThreshold: "1" # Immediate scale from 0 to 1 upon single pending event
+      authenticationRef:
+        name: keda-prometheus-auth

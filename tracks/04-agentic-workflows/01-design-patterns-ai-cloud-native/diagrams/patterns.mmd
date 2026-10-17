@@ -1,0 +1,26 @@
+stateDiagram-v2
+    [*] --> Closed
+
+    state "Circuit: CLOSED" as Closed {
+        [*] --> ProcessCalls
+        ProcessCalls --> Success: 200 OK / Healthy
+        ProcessCalls --> Failure: 5xx / Timeout
+        Failure --> CheckThreshold: failure_count++
+        CheckThreshold --> ProcessCalls: count < 5
+    }
+
+    state "Circuit: OPEN" as Open {
+        [*] --> FastFail: Immediate CircuitBreakerOpenException / Cached Fallback
+        FastFail --> WaitTimer: recovery_timeout (30s)
+    }
+
+    state "Circuit: HALF-OPEN" as HalfOpen {
+        [*] --> CanaryProbe: Allow Single Test Call
+        CanaryProbe --> ProbeSuccess: 200 OK
+        CanaryProbe --> ProbeFailure: 5xx / Timeout
+    }
+
+    CheckThreshold --> Open: count >= 5
+    WaitTimer --> HalfOpen: timer expired
+    ProbeSuccess --> Closed: consecutive_success >= 2 (Reset Count)
+    ProbeFailure --> Open: Reset recovery timer

@@ -1,0 +1,17 @@
+# Knowledge Book - Core Python Dependencies
+# Supports Track 04 (Agentic Workflows & Design Patterns) and module validation tooling
+
+# Data Modeling & Validation
+pydantic>=2.7.0
+
+# HTTP Client & Resilience
+httpx>=0.27.0
+tenacity>=8.3.0
+
+# Declarative Parsing & Schemas
+pyyaml>=6.0.1
+
+# Testing & Quality Engineering
+pytest>=8.2.0
+pytest-asyncio>=0.23.0
+ruff>=0.4.0

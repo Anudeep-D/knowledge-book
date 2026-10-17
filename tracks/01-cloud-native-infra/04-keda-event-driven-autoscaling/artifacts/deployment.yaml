@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-processor
+  namespace: order-fulfillment
+  labels:
+    app.kubernetes.io/name: order-processor
+    app.kubernetes.io/part-of: e-commerce-engine
+    app.kubernetes.io/version: "2.4.1"
+spec:
+  replicas: 1 # Baseline managed dynamically by KEDA / HPA
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: order-processor
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: order-processor
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: worker
+          image: registry.enterprise.internal/ecommerce/order-processor:v2.4.1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: WORKER_CONCURRENCY
+              value: "16"
+            - name: QUEUE_NAME
+              value: "orders-high-priority"
+            - name: PROMETHEUS_METRICS_PORT
+              value: "9090"
+          ports:
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+              ephemeral-storage: "1Gi"
+            limits:
+              cpu: "2000m"
+              memory: "2048Mi"
+              ephemeral-storage: "2Gi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          startupProbe:
+            httpGet:
+              path: /healthz/startup
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /healthz/liveness
+              port: 9090
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz/readiness
+              port: 9090
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 2
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "kill -SIGTERM 1 && sleep 15"]

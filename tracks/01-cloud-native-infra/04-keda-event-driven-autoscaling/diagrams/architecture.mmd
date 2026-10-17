@@ -1,0 +1,21 @@
+sequenceDiagram
+    autonumber
+    participant Kafka as Kafka / Event Source
+    participant Prometheus as Prometheus / Metrics Provider
+    participant Operator as KEDA Operator (Controller)
+    participant MetricsSvc as KEDA Metrics Server (APIService)
+    participant HPA as K8s HPA Controller
+    participant Deployment as Target Deployment (Pods)
+
+    Kafka->>Prometheus: Expose consumer group lag metrics
+    Note over Operator,MetricsSvc: Control Plane Polling Loop
+    Operator->>Prometheus: Poll metrics via ScaledObject triggers (every 15s)
+    alt Metric > Activation Threshold (0 to 1)
+        Operator->>Deployment: Direct scale from 0 to 1 replica (Activate)
+    end
+    HPA->>MetricsSvc: Query custom external metric (keda.sh)
+    MetricsSvc->>Prometheus: Evaluate PromQL expression
+    Prometheus-->>MetricsSvc: Return current metric value
+    MetricsSvc-->>HPA: Return calculated metric value
+    HPA->>Deployment: Adjust replica count (Scale 1 -> N)
+    Deployment->>Kafka: Worker pods drain consumer queue

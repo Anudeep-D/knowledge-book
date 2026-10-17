@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ChunkHygieneRules",
+  "version": "2026-v1",
+  "syntactic_rules": {
+    "min_token_length": 30,
+    "max_token_length": 1024,
+    "max_repeated_ngram_ratio": 0.20,
+    "min_shannon_entropy": 3.0,
+    "max_shannon_entropy": 5.8,
+    "jaccard_dedup_threshold": 0.85
+  },
+  "semantic_rules": {
+    "semdedup_cosine_threshold": 0.92,
+    "clustering_algorithm": "kmeans_centroid_partition",
+    "target_embedding_dimensions": 512
+  },
+  "multimodal_rules": {
+    "min_image_laplacian_variance": 100.0,
+    "min_ocr_confidence": 0.82,
+    "enforce_table_grid_integrity": true
+  },
+  "drift_monitoring": {
+    "metric": "frechet_embedding_distance",
+    "evaluation_window_hours": 24,
+    "alert_drift_threshold": 0.15
+  }
+}

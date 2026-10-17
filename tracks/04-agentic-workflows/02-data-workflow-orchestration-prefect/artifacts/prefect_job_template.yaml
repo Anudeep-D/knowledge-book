@@ -1,0 +1,83 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "prefect-ai-batch-worker-job"
+  namespace: "ai-workloads"
+  labels:
+    app.kubernetes.io/name: "prefect-worker-pod"
+    app.kubernetes.io/part-of: "enterprise-knowledge-engine"
+    prefect.io/work-pool: "k8s-ai-gpu"
+spec:
+  ttlSecondsAfterFinished: 300  # Automatically purge completed job pods after 5 mins
+  backoffLimit: 2               # Kubernetes-level retry attempts before marking Job failed
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "prefect-task-runner"
+        prefect.io/flow-run-id: "{{ flow_run_id }}"
+    spec:
+      restartPolicy: "Never"
+      serviceAccountName: "prefect-workload-runner-sa"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: "RuntimeDefault"
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: "node.kubernetes.io/instance-type"
+                    operator: "In"
+                    values: ["g5.xlarge", "g5.2xlarge"]
+      containers:
+        - name: "prefect-task-container"
+          image: "ghcr.io/enterprise/ai-pipeline-runner:v3.1.0"
+          imagePullPolicy: "IfNotPresent"
+          command: ["prefect", "engine", "run"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: "2000m"
+              memory: "8Gi"
+              nvidia.com/gpu: "1"
+            limits:
+              cpu: "4000m"
+              memory: "16Gi"
+              nvidia.com/gpu: "1"
+          env:
+            - name: "PREFECT_API_URL"
+              valueFrom:
+                configMapKeyRef:
+                  name: "prefect-cluster-config"
+                  key: "api-url"
+            - name: "PREFECT_API_KEY"
+              valueFrom:
+                secretKeyRef:
+                  name: "prefect-auth-secret"
+                  key: "api-key"
+            - name: "HF_HOME"
+              value: "/model-cache"
+          volumeMounts:
+            - name: "ephemeral-scratch"
+              mountPath: "/tmp"
+            - name: "model-cache-pvc"
+              mountPath: "/model-cache"
+      volumes:
+        - name: "ephemeral-scratch"
+          emptyDir:
+            sizeLimit: "10Gi"
+        - name: "model-cache-pvc"
+          persistentVolumeClaim:
+            claimName: "hf-shared-model-cache-pvc"

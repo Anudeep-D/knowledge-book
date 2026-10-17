@@ -1,0 +1,26 @@
+{
+  "$schema": "https://enterprise.internal/schemas/vector-index-v1.json",
+  "index_name": "enterprise_kb_matryoshka_v1",
+  "vector_spec": {
+    "embedding_model": "text-embedding-3-large",
+    "native_dimensions": 1536,
+    "truncated_dimensions": 512,
+    "distance_metric": "cosine",
+    "normalization": "l2_unit_sphere"
+  },
+  "quantization": {
+    "engine": "scalar_quantizer_8bit",
+    "mode": "int8",
+    "compression_ratio": "4x",
+    "clip_bounds": [-1.0, 1.0]
+  },
+  "hnsw_config": {
+    "m": 32,
+    "ef_construction": 200,
+    "ef_search": 64
+  },
+  "memory_budget": {
+    "max_ram_per_million_vectors_gb": 0.55,
+    "expected_mrr_retention": 0.974
+  }
+}

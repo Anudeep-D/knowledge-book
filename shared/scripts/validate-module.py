@@ -24,6 +24,7 @@ VALID_TRACKS = [
     "02-ai-models-inference",
     "03-modern-data-layers",
     "04-agentic-workflows",
+    "05-unstructured-data-governance",
 ]
 
 REQUIRED_SECTIONS = [

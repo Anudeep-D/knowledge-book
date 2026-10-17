@@ -2,9 +2,9 @@
 
 ## Overview
 
-Welcome to **Track 04: Agentic Workflows & Multi-Agent Architectures**. This track bridges traditional distributed software design and stochastic, LLM-driven autonomous systems. It is dedicated to designing resilient, cost-bounded, and deterministic multi-agent architectures using production Python.
+Welcome to **Track 04: Agentic Workflows & Multi-Agent Architectures**. This track bridges traditional distributed software design and stochastic, LLM-driven autonomous systems. It is dedicated to designing resilient, cost-bounded, and deterministic multi-agent architectures using production Python 3.11+.
 
-As software shifts from rigid imperative pipelines to goal-oriented agentic workflows, software engineers need proven design patterns, control structures, observability primitives, and evaluation loops to tame non-deterministic outputs.
+As software shifts from rigid imperative pipelines to goal-oriented agentic workflows, software engineers need proven design patterns, control structures, distributed data orchestration, cyclic state graphs, and rigorous evaluation loops to tame non-deterministic outputs.
 
 ---
 
@@ -20,48 +20,45 @@ As software shifts from rigid imperative pipelines to goal-oriented agentic work
 ## Curriculum Roadmap
 
 ```
-+--------------------------------------------------------------------------+
-|                     AGENTIC WORKFLOWS CURRICULUM ROADMAP                 |
-+--------------------------------------------------------------------------+
-|  01. Design Patterns in the AI & Cloud-Native Era (Python)              |
-|      (Classic Resilience vs Agentic Patterns: Circuit Breaker, Router,  |
-|       Supervisor-Worker, Evaluator-Optimizer, Pydantic v2 Contracts)    |
-|                                                                          |
-|  02. ReAct Reasoning Loops & Structured Tool Calling                     |
-|      (Thought-Action-Observation, Tool Registries, Schema Validation)    |
-|                                                                          |
-|  03. Multi-Agent Topologies & Hierarchical Orchestration                 |
-|      (Orchestrator-Workers, Blackboard Patterns, Consensus Voting)       |
-|                                                                          |
-|  04. Agent Memory Architectures: Short-Term, Epistemic & Long-Term       |
-|      (Buffer Windows, Summary Compaction, Vector Memory Retrieval)       |
-|                                                                          |
-|  05. Sandboxed Code Execution & Tool Safety                              |
-|      (gVisor Containers, WebAssembly Sandboxes, Ephemeral Runner Pods)   |
-|                                                                          |
-|  06. Agentic Evaluations & Synthetic Benchmarks                          |
-|      (LLM-as-a-Judge, Ground-Truth Trajectory Alignment, Cost Limits)    |
-+--------------------------------------------------------------------------+
++----------------------------------------------------------------------------------------------------+
+|                         TRACK 04: ORCHESTRATION & AGENT WORKFLOWS ROADMAP                          |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|  01. Design Patterns in the AI & Cloud-Native Era (Python)                                         |
+|      (Classic Resilience vs Agentic Patterns: Circuit Breaker, Router,                             |
+|       Supervisor-Worker, Evaluator-Optimizer, Pydantic v2 Contracts)                               |
+|                                                                                                    |
+|  02. Data & Workflow Orchestration with Prefect                                                    |
+|      (Dynamic Task Mapping [.map()], Content-Hash Caching, Kubernetes Work Pools,                  |
+|       Token Concurrency Governance, Exponential Jitter Retries)                                    |
+|                                                                                                    |
+|  03. Agentic Topologies & Cyclic State Machines with LangGraph                                     |
+|      (Actor-Model State Graphs, Supervisor-Worker Fan-Out/Fan-In, State Reducers,                  |
+|       PostgreSQL/Memory Checkpointing, Human-in-the-Loop Interruption Gates)                        |
+|                                                                                                    |
+|  04. Production Guardrails, Structured Outputs & LLMOps Evaluation Loops                           |
+|      (Pydantic v2 Strict Mode, LLM Self-Correction Loops, Ingress/Egress Guardrails,                |
+|       OpenTelemetry GenAI Semantic Spans, RAG Triad Automated Evaluation Harness)                   |
+|                                                                                                    |
++----------------------------------------------------------------------------------------------------+
 ```
 
 ---
 
-## Active & Upcoming Modules
+## Active & Core Curriculum Modules
 
 | Module Slug | Status | Focus Areas | Key Artifacts |
 | :--- | :--- | :--- | :--- |
-| `01-design-patterns-ai-cloud-native` | **Active / Reference** | Classic vs Agentic patterns, Circuit Breaker, Supervisor-Worker, Evaluator-Optimizer | Production Python implementations (`circuit_breaker.py`, `semantic_router.py`, `supervisor_worker.py`, `evaluator_optimizer.py`) |
-| `02-react-loops-tool-calling` | *Planned* | Dynamic tool selection, JSON schema repair | Python ReAct loop, tool registry |
-| `03-multi-agent-orchestration` | *Planned* | LangGraph / Native graph state handoffs | State graph engine, worker agents |
-| `04-agent-memory-hierarchies` | *Planned* | Semantic cache, episodic vector recall | Sliding window buffer, vector memory |
-| `05-sandboxed-agent-execution` | *Planned* | Docker/gVisor sandboxed Python runner | Sandboxed runner service, safety checks |
-| `06-agentic-evals-judge` | *Planned* | Metric assertions, synthetic benchmark suites | Evaluation harness, rubric scorer |
+| [`01-design-patterns-ai-cloud-native`](./01-design-patterns-ai-cloud-native/index.md) | **Active / Reference** | Classic vs Agentic patterns, Circuit Breaker, Supervisor-Worker, Evaluator-Optimizer | `classic_resilience.py`, `agentic_patterns.py` |
+| [`02-data-workflow-orchestration-prefect`](./02-data-workflow-orchestration-prefect/index.md) | **Active** | Dynamic task mapping (`.map()`), content-hash caching, K8s work pool pods, token limits | `prefect_rag_pipeline.py`, `prefect_job_template.yaml` |
+| [`03-agentic-topologies-state-machines`](./03-agentic-topologies-state-machines/index.md) | **Active** | Cyclic state graphs, supervisor-worker routing, checkpoint persistence, HITL gates | `supervisor_langgraph.py`, `hitl_checkpoint_agent.py` |
+| [`04-production-guardrails-evals`](./04-production-guardrails-evals/index.md) | **Active** | Pydantic v2 strict schemas, self-correction repair, OpenTelemetry GenAI spans, RAG Triad evals | `guarded_schema_repair.py`, `evals_otel_harness.py` |
 
 ---
 
 ## Prerequisites & Tooling
 
-- Advanced Python 3.10+ (type hints, `pydantic` v2, `asyncio`, decorators).
-- Familiarity with LLM APIs (OpenAI, Anthropic, or local vLLM/Ollama endpoints).
-- Understanding of microservices concepts (circuit breaking, retry policies, distributed state).
-- Recommended environment: Python 3.11 virtual environment with `httpx`, `tenacity`, `pydantic`, `pytest`.
+- Advanced Python 3.11+ (type hints, `pydantic` v2, `asyncio`, decorators, typing protocols).
+- Orchestration & Graph Engines: `prefect>=3.0`, `langgraph>=0.2.0`, `langchain-core>=0.2.0`.
+- Observability & Resilience: `opentelemetry-api>=1.24.0`, `tenacity>=8.2.0`, `httpx>=0.27.0`.
+- Testing & Verification: `pytest>=8.0.0`, `pytest-asyncio>=0.23.0`.

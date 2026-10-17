@@ -1,0 +1,4 @@
+Diagram Source: 02-data-quality-hygiene-curation-pipelines
+Visual representation of Data Hygiene Pipeline:
+Syntactic MinHash LSH filter -> SemDeDup intra-cluster cosine pruning -> Multimodal layout quality gate.
+ASCII source embedded in index.md Section 2.

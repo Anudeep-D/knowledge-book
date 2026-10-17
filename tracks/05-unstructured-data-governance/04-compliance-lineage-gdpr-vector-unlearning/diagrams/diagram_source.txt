@@ -1,0 +1,4 @@
+Diagram Source: 04-compliance-lineage-gdpr-vector-unlearning
+Visual representation of Vector Lineage & GDPR Unlearning:
+OpenLineage DAG tracking source URN to vector chunk IDs -> Soft Tombstone Bitset -> Partition compaction.
+ASCII source embedded in index.md Section 2.

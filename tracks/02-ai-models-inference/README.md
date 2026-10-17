@@ -2,55 +2,57 @@
 
 ## Overview
 
-Welcome to **Track 02: AI Models, Serving & Inference Engineering**. This track is dedicated to the systems engineering discipline required to deploy, optimize, and serve large language models (LLMs) and foundation models at scale with ultra-low latency and maximum token throughput.
-
-Beyond high-level prompt engineering, this track focuses on the lower levels of the modern AI serving stack: GPU memory layout, kernel execution, continuous batching, quantization architectures, and distributed inference engines (vLLM, TensorRT-LLM, Triton).
+Welcome to **Track 02: AI Models, Serving & Inference Engineering**. This track establishes the core systems engineering discipline required to select foundation models, project unstructured knowledge into dense metric vector spaces, preserve semantic context across token window boundaries, ingest heterogeneous multimodal data, and deploy high-throughput distributed inference engines at scale.
 
 ---
 
 ## Pedagogical Philosophy
 
-1. **Hardware & Memory Bound Reality:** Understanding GPU compute boundaries (FLOP/s) vs. memory bandwidth limits (TB/s) and how KV caching transforms inference economics.
-2. **Serving Engine Visualizations:** Architectural diagrams dissecting token generation loops, prefill vs. decode phase splits, and distributed tensor parallelism.
-3. **Executable Systems Code:** Python and CUDA/Triton kernels, serving configurations, and containerized deployment specs with health checks and GPU resource pinning.
-4. **Latency vs. Accuracy Trade-offs:** Detailed comparative tables on quantization formats (FP16, INT8, INT4, AWQ, GPTQ) and speculative decoding verification budgets.
+1. **First-Principles Representation Geometry:** Understanding high-dimensional metric manifolds, cosine proximity, Matryoshka Representation Learning (MRL), and quantization economics.
+2. **Control Plane vs. Data Plane Separation:** Clear visual delineation between dynamic model routing / AST parsing and low-latency tensor execution / vector indexing.
+3. **Executable Systems Code:** Production-grade Python 3.12+ reference implementations with Pydantic validation, typed async pipelines, and declarative JSON configurations.
+4. **Failure Mode Blast Radius Analysis:** Concrete incident post-mortems exploring runaway token spend, vector memory cliffs, context boundary rupture, and table flattening disasters.
 
 ---
 
 ## Curriculum Roadmap
 
 ```
-+--------------------------------------------------------------------------+
-|                       AI SERVING CURRICULUM ROADMAP                      |
-+--------------------------------------------------------------------------+
-|  01. PagedAttention & KV-Cache Memory Management                         |
-|      (Virtual Memory Paging, vLLM Engine, Block Allocations, Fragmentation)
-|                                                                          |
-|  02. Speculative Decoding & Draft Model Serving                          |
-|      (Speculative Sampling, Tree Attention, Acceptance Thresholds)       |
-|                                                                          |
-|  03. Continuous Batching & In-Flight Request Scheduling                  |
-|      (Static vs Dynamic Batching, Iteration-Level Scheduling, Starvation)|
-|                                                                          |
-|  04. Quantization Architectures & Kernel Acceleration                    |
-|      (AWQ, GPTQ, SmoothQuant, FlashAttention-2/3, Triton Kernels)       |
-|                                                                          |
-|  05. Distributed Tensor & Pipeline Parallelism Serving                   |
-|      (NCCL, Megatron-LM Spans, Inter-GPU Comm, Ray Serve Clustering)     |
-+--------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------+
+|                 TRACK 02: FOUNDATION MODELS, EMBEDDINGS & INFERENCE                   |
++---------------------------------------------------------------------------------------+
+|  TIER A: REPRESENTATION & INGESTION LAYER                                             |
+|                                                                                       |
+|  01. Model Taxonomy & Selection: Architectural Tiers and Dynamic Routing              |
+|      (Fast-Inference 8B vs Reasoning o-Series vs VLM vs LoRA, Entropy Scoring)        |
+|                                                                                       |
+|  02. Embedding Models & Vector Space: Metric Geometry & Dimensionality Compaction     |
+|      (Hypersphere Geometry, Matryoshka Slicing 1536d->512d, L2 Norm, SQ8 int8)        |
+|                                                                                       |
+|  03. Context Windows & Chunking: Token Dynamics & Semantic Boundary Preservation      |
+|      (Small-to-Big Retrieval, Parent-Child Hierarchies, Breadcrumb Metadata Injection)|
+|                                                                                       |
+|  04. Multimodal Data Pipelines: Mixed-Input Ingestion & Visual Late Interaction       |
+|      (2D Financial Tables, Text-First VLM Decomposition vs ColPali Multi-Vectors)    |
+|                                                                                       |
+|  TIER B: DISTRIBUTED SERVING & GPU ACCELERATION                                       |
+|                                                                                       |
+|  05. Distributed Inference Serving & GPU Memory Management                            |
+|      (PagedAttention, KV Cache Paging, Continuous Batching, Tensor Parallelism)       |
++---------------------------------------------------------------------------------------+
 ```
 
 ---
 
-## Active & Upcoming Modules
+## Module Registry
 
 | Module Slug | Status | Focus Areas | Key Artifacts |
 | :--- | :--- | :--- | :--- |
-| `01-paged-attention-kv-cache` | *Planned* | Non-contiguous memory allocation, PagedAttention vLLM | Python vLLM config, cache benchmark suite |
-| `02-speculative-decoding-serving` | *Planned* | Draft-verifier pipeline, speculative acceptance rates | Python verification loop, latency profiler |
-| `03-continuous-batching-scheduling`| *Planned* | Dynamic iteration scheduling, TTFT vs TPOT optimization | Triton model repository, client benchmark |
-| `04-quantization-awq-gptq` | *Planned* | Weight-only vs weight-activation quantization | vLLM quantization launch configs |
-| `05-distributed-inference-ray` | *Planned* | Tensor parallelism over RoCE/InfiniBand | RayCluster manifest, multi-GPU deployment |
+| **[`01-model-taxonomy-selection`](./01-model-taxonomy-selection/)** | **Complete** | Fast vs reasoning tiers, dynamic routing, fallback SLA | `router.py`, `model-router-policy.json` |
+| **[`02-embeddings-vector-space`](./02-embeddings-vector-space/)** | **Complete** | 240GB memory cliff, MRL slicing, SQ8 quantization | `embedding_pipeline.py`, `vector-index-config.json` |
+| **[`03-context-windows-chunking`](./03-context-windows-chunking/)** | **Complete** | Boundary rupture, Parent-Child retrieval, breadcrumbs | `contextual_chunker.py`, `chunking-rules.json` |
+| **[`04-multimodal-data-pipelines`](./04-multimodal-data-pipelines/)** | **Complete** | Table flattening, ColPali late-interaction, VLM | `multimodal_pipeline.py`, `multimodal-pipeline.json` |
+| `05-distributed-inference-serving` | *Planned* | PagedAttention, KV-cache, continuous batching | Triton/vLLM configs, RayCluster manifests |
 
 ---
 
@@ -58,5 +60,5 @@ Beyond high-level prompt engineering, this track focuses on the lower levels of 
 
 - Solid foundation in Python 3.10+ and asynchronous programming (`asyncio`).
 - Understanding of transformer architectures (self-attention mechanism, query-key-value projections).
-- Familiarity with PyTorch tensors and CUDA runtime basics.
-- Recommended lab setup: NVIDIA GPU environment (A10G, T4, L4, or local RTX) or cloud GPU instances (RunPod, Lambda, AWS EC2).
+- Familiarity with PyTorch tensors, vector databases (HNSW), and tokenizer mechanics.
+- Recommended lab setup: Modern Python virtual environment (`.venv`) and access to local or cloud acceleration for vector indexing and serving experiments.

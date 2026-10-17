@@ -1,0 +1,25 @@
+{
+  "$schema": "https://enterprise.internal/schemas/chunking-rules-v1.json",
+  "chunking_strategy": "hierarchical_parent_child",
+  "tokenizer_encoding": "cl100k_base",
+  "parent_window": {
+    "target_tokens": 1024,
+    "overlap_tokens": 128,
+    "min_tokens": 256
+  },
+  "child_window": {
+    "target_tokens": 256,
+    "overlap_tokens": 32,
+    "min_tokens": 64
+  },
+  "enrichment": {
+    "prepend_document_title": true,
+    "prepend_breadcrumb_hierarchy": true,
+    "header_template": "Document: {doc_title} | Path: {section_path}\n---\n"
+  },
+  "guardrails": {
+    "max_allowed_split_entropy": 0.85,
+    "preserve_code_blocks": true,
+    "preserve_table_rows": true
+  }
+}

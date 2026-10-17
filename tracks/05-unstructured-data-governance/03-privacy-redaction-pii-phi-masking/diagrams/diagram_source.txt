@@ -1,0 +1,4 @@
+Diagram Source: 03-privacy-redaction-pii-phi-masking
+Visual representation of Defense-in-Depth Privacy Architecture:
+Presidio NER Masking -> Format-Preserving Encryption Vault -> Indirect Prompt-Injection Guard.
+ASCII source embedded in index.md Section 2.

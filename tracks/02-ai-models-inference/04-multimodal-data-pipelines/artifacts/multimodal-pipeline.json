@@ -1,0 +1,29 @@
+{
+  "$schema": "https://enterprise.internal/schemas/multimodal-pipeline-v1.json",
+  "pipeline_id": "enterprise_hybrid_multimodal_v1",
+  "document_types": [
+    "application/pdf",
+    "image/png",
+    "image/jpeg",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ],
+  "routing_policy": {
+    "dense_financial_reports": "colpali_visual_late_interaction",
+    "structured_forms_and_invoices": "vlm_markdown_decomposition",
+    "plain_documentation": "text_recursive_extraction"
+  },
+  "table_extraction": {
+    "target_format": "markdown_pipe_table",
+    "validate_header_integrity": true,
+    "max_columns": 64
+  },
+  "vision_transformer": {
+    "model_name": "vidore/colpali-v1.2",
+    "image_dpi": 150,
+    "patch_dimension": 128
+  },
+  "guardrails": {
+    "sanitize_hidden_text": true,
+    "preserve_reading_order": true
+  }
+}

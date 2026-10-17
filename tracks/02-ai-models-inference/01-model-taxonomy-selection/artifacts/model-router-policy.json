@@ -1,0 +1,45 @@
+{
+  "$schema": "https://enterprise.internal/schemas/model-routing-v1.json",
+  "routing_rules": [
+    {
+      "rule_id": "pii_regulated_path",
+      "description": "Routes privacy-sensitive and regulated payloads to on-prem air-gapped instances",
+      "conditions": {
+        "contains_pii": true
+      },
+      "target_pool": "on_prem_llama_guard",
+      "timeout_ms": 1500,
+      "fallback": "reject"
+    },
+    {
+      "rule_id": "multimodal_vision_path",
+      "description": "Routes documents, charts, and image payloads to dedicated Vision-Language Models",
+      "conditions": {
+        "has_images": true
+      },
+      "target_pool": "vlm_document_parser",
+      "timeout_ms": 6000,
+      "fallback": "fast_instruct_tier"
+    },
+    {
+      "rule_id": "deep_reasoning_eval",
+      "description": "Routes high-entropy, multi-step math/code/logic problems to reasoning frontier engines",
+      "conditions": {
+        "reasoning_complexity_score_gte": 0.75
+      },
+      "target_pool": "frontier_reasoning_engine",
+      "timeout_ms": 25000,
+      "fallback": "fast_instruct_tier"
+    },
+    {
+      "rule_id": "default_fast_tier",
+      "description": "Default fast-path routing for high-throughput sub-second queries",
+      "conditions": {
+        "reasoning_complexity_score_lt": 0.75
+      },
+      "target_pool": "fast_instruct_tier",
+      "timeout_ms": 2000,
+      "fallback": "cached_deflection"
+    }
+  ]
+}

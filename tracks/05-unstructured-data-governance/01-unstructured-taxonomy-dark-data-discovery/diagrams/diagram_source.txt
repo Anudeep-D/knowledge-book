@@ -1,0 +1,3 @@
+Diagram Source: 01-unstructured-taxonomy-dark-data-discovery
+Visual representation of Control Plane (Policy & Ingestion Gatekeeper) and Data Plane (MIME Sniffing & Shannon Entropy Router).
+ASCII source embedded in index.md Section 2.

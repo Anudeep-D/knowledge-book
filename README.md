@@ -160,7 +160,5 @@ python3 shared/scripts/validate-module.py tracks/01-cloud-native-infra/01-modern
 ### Installation
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 ```
